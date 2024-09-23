@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script>
+        function generateICS() {
+            const eventStart = new Date();
+            eventStart.setHours(19, 0, 0, 0); // Set to 7 PM today
+            const eventEnd = new Date(eventStart);
+            eventEnd.setHours(20, 0, 0, 0); // End at 8 PM
+
+            const start = eventStart.toISOString().replace(/-|:|\.\d+/g, '');
+            const end = eventEnd.toISOString().replace(/-|:|\.\d+/g, '');
+
+            const icsContent = `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Your Website//Your Event
+CALSCALE:GREGORIAN
+BEGIN:VEVENT
+DTSTART:${start}
+DTEND:${end}
+SUMMARY:Reminder to Do Task
+DESCRIPTION:This is a reminder to complete the task you set.
+LOCATION:Your Location
+END:VEVENT
+END:VCALENDAR`;
+
+            const blob = new Blob([icsContent], { type: 'text/calendar' });
+            const url = URL.createObjectURL(blob);
+
+            // Create a temporary link to trigger the download
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'event.ics';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url); // Clean up
+        }
+    </script>
+</head>
+<body>
+    <button onclick="generateICS()">Download ICS File</button>
+</body>
+</html>
